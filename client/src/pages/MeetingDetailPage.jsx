@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api, errorMessage } from '../api/client';
+import {
+  IconSparkles,
+  IconCheck,
+  IconClock,
+  IconFileText,
+} from '../components/Icons';
 
 const POLL_MS = 4000;
 
@@ -112,12 +118,12 @@ export default function MeetingDetailPage() {
             <span className={`badge ${meeting.status}`}>{meeting.status}</span>
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div className="head-actions">
           <button className="btn secondary small" onClick={shareSlack} disabled={processing}>
             Share to Slack
           </button>
           <button className="btn secondary small" onClick={reprocess} disabled={processing}>
-            Re-run AI
+            <IconSparkles size={14} /> Re-run AI
           </button>
           <button className="btn danger small" onClick={remove}>
             Delete
@@ -129,11 +135,12 @@ export default function MeetingDetailPage() {
       {notice && <div className="success-banner">{notice}</div>}
 
       {processing && (
-        <div className="card">
-          <h2>⏳ Processing</h2>
-          <p style={{ color: 'var(--text-dim)', fontSize: 14 }}>
-            Transcribing and analyzing this meeting. This page refreshes automatically.
-          </p>
+        <div className="card processing-card">
+          <div className="spinner" />
+          <div className="txt">
+            <strong>Processing this meeting</strong>
+            Transcribing and analyzing — the page refreshes automatically.
+          </div>
         </div>
       )}
 
@@ -145,8 +152,10 @@ export default function MeetingDetailPage() {
 
       {meeting.summary && (
         <div className="card">
-          <h2>Summary</h2>
-          <p style={{ fontSize: 14, lineHeight: 1.7, margin: 0 }}>{meeting.summary}</p>
+          <h2>
+            <IconSparkles size={16} /> Summary
+          </h2>
+          <p className="summary-text">{meeting.summary}</p>
           {meeting.topics?.length > 0 && (
             <div className="chip-row" style={{ marginTop: 12 }}>
               {meeting.topics.map((t) => (
@@ -161,7 +170,9 @@ export default function MeetingDetailPage() {
 
       {meeting.keyDecisions?.length > 0 && (
         <div className="card">
-          <h2>Key decisions</h2>
+          <h2>
+            <IconCheck size={16} /> Key decisions
+          </h2>
           <ul className="decisions">
             {meeting.keyDecisions.map((d, i) => (
               <li key={i}>{d}</li>
@@ -172,7 +183,9 @@ export default function MeetingDetailPage() {
 
       {meeting.actionItems?.length > 0 && (
         <div className="card">
-          <h2>Action items</h2>
+          <h2>
+            <IconClock size={16} /> Action items
+          </h2>
           {meeting.actionItems.map((a) => (
             <div key={a._id} className="action-item">
               <input
@@ -208,7 +221,9 @@ export default function MeetingDetailPage() {
 
       {meeting.transcript && (
         <div className="card">
-          <h2>Transcript</h2>
+          <h2>
+            <IconFileText size={16} /> Transcript
+          </h2>
           <div className="transcript-box">{meeting.transcript}</div>
         </div>
       )}

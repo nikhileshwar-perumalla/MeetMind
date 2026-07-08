@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api, errorMessage } from '../api/client';
+import { LogoMark } from '../components/Icons';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
@@ -42,6 +43,9 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <div className="auth-logo">
+          <LogoMark size={44} />
+        </div>
         <h1>Welcome back</h1>
         <p className="sub">Sign in to your MeetMind account</p>
         {error && <div className="error-banner">{error}</div>}

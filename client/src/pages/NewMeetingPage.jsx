@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api, errorMessage } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { IconUpload, IconFileText } from '../components/Icons';
 
 export default function NewMeetingPage() {
   const { workspace } = useAuth();
@@ -16,6 +17,7 @@ export default function NewMeetingPage() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [dragging, setDragging] = useState(false);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -90,32 +92,57 @@ export default function NewMeetingPage() {
             />
           </label>
 
-          <div className="chip-row" style={{ marginBottom: 14 }}>
+          <div className="segmented" role="tablist">
             <button
               type="button"
-              className={`btn small ${mode === 'upload' ? '' : 'secondary'}`}
+              className={mode === 'upload' ? 'active' : ''}
               onClick={() => setMode('upload')}
             >
-              Upload recording
+              <IconUpload size={15} /> Upload recording
             </button>
             <button
               type="button"
-              className={`btn small ${mode === 'transcript' ? '' : 'secondary'}`}
+              className={mode === 'transcript' ? 'active' : ''}
               onClick={() => setMode('transcript')}
             >
-              Paste transcript
+              <IconFileText size={15} /> Paste transcript
             </button>
           </div>
 
           {mode === 'upload' ? (
-            <label className="field">
-              <span>Audio / video file (mp3, wav, m4a, mp4, webm — up to 100 MB)</span>
+            <div
+              className={`dropzone ${dragging ? 'drag' : ''}`}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setDragging(true);
+              }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragging(false);
+                const dropped = e.dataTransfer.files?.[0];
+                if (dropped) setFile(dropped);
+              }}
+            >
+              <IconUpload size={28} />
+              {file ? (
+                <>
+                  <div className="dz-file">{file.name}</div>
+                  <div className="dz-hint">{(file.size / (1024 * 1024)).toFixed(1)} MB — click or drop to replace</div>
+                </>
+              ) : (
+                <>
+                  <div className="dz-title">Drop your recording here, or click to browse</div>
+                  <div className="dz-hint">mp3, wav, m4a, mp4, webm — up to 100 MB</div>
+                </>
+              )}
               <input
                 type="file"
                 accept="audio/*,video/mp4,video/webm,video/quicktime"
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
+                aria-label="Audio or video file"
               />
-            </label>
+            </div>
           ) : (
             <label className="field">
               <span>Transcript</span>

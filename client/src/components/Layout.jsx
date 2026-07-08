@@ -1,5 +1,22 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import {
+  LogoMark,
+  IconMeetings,
+  IconPlus,
+  IconSearch,
+  IconUsers,
+  IconLogout,
+} from './Icons';
+
+function initials(name = '') {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('');
+}
 
 export default function Layout() {
   const { user, workspace, workspaces, switchWorkspace, logout } = useAuth();
@@ -14,24 +31,33 @@ export default function Layout() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
-          Meet<span>Mind</span>
+          <LogoMark size={30} />
+          <div>
+            Meet<span>Mind</span>
+          </div>
         </div>
         <NavLink to="/" end className="nav-link">
-          📋 Meetings
+          <IconMeetings /> Meetings
         </NavLink>
         <NavLink to="/meetings/new" className="nav-link">
-          ⬆️ New Meeting
+          <IconPlus /> New meeting
         </NavLink>
         <NavLink to="/search" className="nav-link">
-          🔍 Search
+          <IconSearch /> Search
         </NavLink>
         <NavLink to="/workspace" className="nav-link">
-          👥 Workspace
+          <IconUsers /> Workspace
         </NavLink>
         <div className="spacer" />
         <div className="user-box">
-          <div className="name">{user?.name}</div>
-          {workspaces.length > 1 ? (
+          <div className="user-row">
+            <div className="avatar">{initials(user?.name)}</div>
+            <div className="user-meta">
+              <div className="name">{user?.name}</div>
+              <div className="ws">{workspace?.name}</div>
+            </div>
+          </div>
+          {workspaces.length > 1 && (
             <select
               className="workspace-select"
               value={workspace?._id || ''}
@@ -44,11 +70,9 @@ export default function Layout() {
                 </option>
               ))}
             </select>
-          ) : (
-            <div>{workspace?.name}</div>
           )}
-          <button className="btn secondary small" style={{ marginTop: 10 }} onClick={handleLogout}>
-            Sign out
+          <button className="signout-btn" onClick={handleLogout}>
+            <IconLogout size={16} /> Sign out
           </button>
         </div>
       </aside>

@@ -1,6 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api, errorMessage } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { IconUsers } from '../components/Icons';
+
+function initials(name = '') {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('');
+}
 
 export default function WorkspacePage() {
   const { workspace, user } = useAuth();
@@ -70,7 +80,9 @@ export default function WorkspacePage() {
       {error && <div className="error-banner">{error}</div>}
 
       <div className="card">
-        <h2>Members</h2>
+        <h2>
+          <IconUsers size={16} /> Members
+        </h2>
         <table className="members">
           <thead>
             <tr>
@@ -83,10 +95,15 @@ export default function WorkspacePage() {
           <tbody>
             {detail?.members?.map((m) => (
               <tr key={m.user._id}>
-                <td>{m.user.name}</td>
-                <td>{m.user.email}</td>
                 <td>
-                  <span className="chip">{m.role}</span>
+                  <div className="member-cell">
+                    <div className="avatar">{initials(m.user.name)}</div>
+                    {m.user.name}
+                  </div>
+                </td>
+                <td style={{ color: 'var(--text-dim)' }}>{m.user.email}</td>
+                <td>
+                  <span className={`role-chip ${m.role}`}>{m.role}</span>
                 </td>
                 {canManage && (
                   <td style={{ textAlign: 'right' }}>
@@ -106,7 +123,7 @@ export default function WorkspacePage() {
       {canManage && (
         <div className="card">
           <h2>Invite a member</h2>
-          <p style={{ fontSize: 13, color: 'var(--text-dim)' }}>
+          <p style={{ fontSize: 13, color: 'var(--text-dim)', marginTop: -6, marginBottom: 16 }}>
             The person must already have a MeetMind account.
           </p>
           <form onSubmit={invite} style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>

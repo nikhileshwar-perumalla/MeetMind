@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, errorMessage } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { IconMic, IconPlus } from '../components/Icons';
 
 function formatDate(d) {
   return new Date(d).toLocaleDateString(undefined, {
@@ -32,7 +33,7 @@ export default function DashboardPage() {
           <p className="sub">{workspace?.name}</p>
         </div>
         <Link to="/meetings/new" className="btn">
-          + New meeting
+          <IconPlus size={16} /> New meeting
         </Link>
       </div>
 
@@ -42,11 +43,17 @@ export default function DashboardPage() {
 
       {meetings?.length === 0 && (
         <div className="empty-state">
-          <p>No meetings yet.</p>
+          <div className="icon-bubble">
+            <IconMic size={26} />
+          </div>
+          <div className="title">No meetings yet</div>
           <p>
-            <Link to="/meetings/new">Upload your first recording</Link> to generate a transcript,
-            summary, and action items.
+            Upload a recording or paste a transcript — MeetMind will generate the summary,
+            key decisions, and action items for you.
           </p>
+          <Link to="/meetings/new" className="btn">
+            <IconPlus size={16} /> Add your first meeting
+          </Link>
         </div>
       )}
 

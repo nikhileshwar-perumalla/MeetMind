@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, errorMessage } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { IconSearch } from '../components/Icons';
 
 export default function SearchPage() {
   const { workspace } = useAuth();
@@ -38,6 +39,9 @@ export default function SearchPage() {
       </div>
 
       <form className="search-bar" onSubmit={submit}>
+        <span style={{ display: 'grid', placeItems: 'center', paddingLeft: 10, color: 'var(--text-faint)' }}>
+          <IconSearch size={18} />
+        </span>
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -52,7 +56,13 @@ export default function SearchPage() {
       {error && <div className="error-banner">{error}</div>}
 
       {results !== null && results.length === 0 && (
-        <div className="empty-state">No matches. Try rephrasing your question.</div>
+        <div className="empty-state">
+          <div className="icon-bubble">
+            <IconSearch size={24} />
+          </div>
+          <div className="title">No matches</div>
+          <p>Try rephrasing your question or using different keywords.</p>
+        </div>
       )}
 
       {results?.map((r) => (

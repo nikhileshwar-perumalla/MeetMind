@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { errorMessage } from '../api/client';
+import { LogoMark } from '../components/Icons';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -29,6 +30,9 @@ export default function RegisterPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <div className="auth-logo">
+          <LogoMark size={44} />
+        </div>
         <h1>Create your account</h1>
         <p className="sub">Start turning meetings into knowledge</p>
         {error && <div className="error-banner">{error}</div>}
