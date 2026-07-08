@@ -172,8 +172,13 @@ h1, h2, h3 { letter-spacing: -0.025em; }
 .main {
   flex: 1;
   padding: 40px 48px 64px;
-  max-width: 1060px;
   min-width: 0;
+}
+
+/* Content is centered at a comfortable reading width instead of pinned left. */
+.main-inner {
+  max-width: 1240px;
+  margin: 0 auto;
 }
 
 .page-loading { padding: 80px; text-align: center; color: var(--text-dim); }
