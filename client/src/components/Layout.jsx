@@ -77,7 +77,9 @@ export default function Layout() {
         </div>
       </aside>
       <main className="main">
-        <Outlet />
+        <div className="main-inner">
+          <Outlet />
+        </div>
       </main>
     </div>
   );
