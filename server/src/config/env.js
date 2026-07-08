@@ -77,6 +77,6 @@ export function reportConfigStatus(logger) {
   if (!env.jira.enabled) logger.info('Jira integration not configured.');
   if (!env.slack.enabled) logger.info('Slack integration not configured.');
   if (env.jwt.secret === 'dev-insecure-secret-change-me' && env.isProd) {
-    logger.warn('JWT_SECRET is using the insecure default in production — set a strong secret!');
+    throw new Error('JWT_SECRET must be set in production — refusing to start with the insecure default.');
   }
 }

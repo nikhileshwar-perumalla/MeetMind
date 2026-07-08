@@ -26,11 +26,14 @@ api.interceptors.response.use(
   }
 );
 
-/** Extracts a human-readable message from an API error. */
+/** Extracts a human-readable message from an API error, including field-level details. */
 export function errorMessage(err) {
-  return (
-    err.response?.data?.error?.message ||
-    err.message ||
-    'Something went wrong'
-  );
+  const apiError = err.response?.data?.error;
+  if (apiError?.message) {
+    const details = (apiError.details || [])
+      .map((d) => (typeof d === 'string' ? d : `${d.path}: ${d.message}`))
+      .join('; ');
+    return details ? `${apiError.message} — ${details}` : apiError.message;
+  }
+  return err.message || 'Something went wrong';
 }

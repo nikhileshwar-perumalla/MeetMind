@@ -15,6 +15,7 @@ export default function NewMeetingPage() {
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -36,11 +37,15 @@ export default function NewMeetingPage() {
 
       const { data } = await api.post('/meetings', form, {
         headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: (e) => {
+          if (e.total) setProgress(Math.round((e.loaded / e.total) * 100));
+        },
       });
       navigate(`/meetings/${data.meeting._id}`);
     } catch (err) {
       setError(errorMessage(err));
       setBusy(false);
+      setProgress(0);
     }
   };
 
@@ -124,8 +129,17 @@ export default function NewMeetingPage() {
           )}
 
           <button className="btn" disabled={busy}>
-            {busy ? 'Uploading…' : 'Create meeting'}
+            {busy
+              ? mode === 'upload' && progress > 0 && progress < 100
+                ? `Uploading… ${progress}%`
+                : 'Uploading…'
+              : 'Create meeting'}
           </button>
+          {busy && mode === 'upload' && progress > 0 && (
+            <div className="progress-track" aria-hidden>
+              <div className="progress-fill" style={{ width: `${progress}%` }} />
+            </div>
+          )}
         </form>
       </div>
     </>

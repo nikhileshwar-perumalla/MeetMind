@@ -30,6 +30,9 @@ export class ApiError extends Error {
   static internal(msg = 'Internal server error') {
     return new ApiError(500, msg);
   }
+  static serviceUnavailable(msg = 'Service unavailable') {
+    return new ApiError(503, msg);
+  }
 }
 
 /** Wraps an async route handler so rejected promises reach the error middleware. */

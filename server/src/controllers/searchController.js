@@ -1,7 +1,8 @@
 import { z } from 'zod';
-import { asyncHandler } from '../utils/ApiError.js';
-import { searchWorkspace } from '../services/vectorStore.js';
+import { ApiError, asyncHandler } from '../utils/ApiError.js';
+import { searchWorkspace, vectorStoreHealthy } from '../services/vectorStore.js';
 import { Meeting } from '../models/Meeting.js';
+import { env } from '../config/env.js';
 
 export const searchSchema = z.object({
   workspaceId: z.string().min(1),
@@ -15,6 +16,13 @@ export const searchSchema = z.object({
  */
 export const search = asyncHandler(async (req, res) => {
   const { query, limit } = req.body;
+
+  if (!env.openai.enabled) {
+    throw ApiError.serviceUnavailable('Search requires OpenAI to be configured on the server.');
+  }
+  if (!(await vectorStoreHealthy())) {
+    throw ApiError.serviceUnavailable('The vector store (ChromaDB) is unreachable.');
+  }
 
   const hits = await searchWorkspace({
     workspaceId: req.workspace._id,

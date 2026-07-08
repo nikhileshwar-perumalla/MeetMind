@@ -148,6 +148,16 @@ textarea { resize: vertical; min-height: 120px; }
   margin-bottom: 14px;
 }
 
+.success-banner {
+  background: rgba(62, 207, 142, 0.1);
+  border: 1px solid var(--success);
+  color: var(--success);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
 /* ─── Page headers & cards ──────────────────────────────── */
 .page-head {
   display: flex;
@@ -270,6 +280,30 @@ table.members th {
   border-bottom: 1px solid var(--border);
 }
 table.members td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+
+/* ─── Workspace switcher (sidebar) ──────────────────────── */
+.workspace-select {
+  width: 100%;
+  margin-top: 4px;
+  padding: 6px 8px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+/* ─── Upload progress ───────────────────────────────────── */
+.progress-track {
+  margin-top: 12px;
+  height: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
 
 @media (max-width: 800px) {
   .app-shell { flex-direction: column; }

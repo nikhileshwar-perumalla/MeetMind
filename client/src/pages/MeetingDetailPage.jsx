@@ -44,8 +44,12 @@ export default function MeetingDetailPage() {
 
   const toggleAction = async (action) => {
     const status = action.status === 'done' ? 'open' : 'done';
-    const { data } = await api.patch(`/meetings/${id}/actions/${action._id}`, { status });
-    setMeeting(data.meeting);
+    try {
+      const { data } = await api.patch(`/meetings/${id}/actions/${action._id}`, { status });
+      setMeeting(data.meeting);
+    } catch (err) {
+      setError(errorMessage(err));
+    }
   };
 
   const exportJira = async (action) => {
@@ -74,15 +78,23 @@ export default function MeetingDetailPage() {
   const reprocess = async () => {
     setNotice('');
     setError('');
-    await api.post(`/meetings/${id}/reprocess`);
-    setMeeting((m) => ({ ...m, status: 'processing' }));
-    pollRef.current = setTimeout(load, POLL_MS);
+    try {
+      await api.post(`/meetings/${id}/reprocess`);
+      setMeeting((m) => ({ ...m, status: 'processing' }));
+      pollRef.current = setTimeout(load, POLL_MS);
+    } catch (err) {
+      setError(errorMessage(err));
+    }
   };
 
   const remove = async () => {
     if (!window.confirm('Delete this meeting permanently?')) return;
-    await api.delete(`/meetings/${id}`);
-    navigate('/');
+    try {
+      await api.delete(`/meetings/${id}`);
+      navigate('/');
+    } catch (err) {
+      setError(errorMessage(err));
+    }
   };
 
   if (!meeting && !error) return <div className="page-loading">Loading…</div>;
@@ -114,11 +126,7 @@ export default function MeetingDetailPage() {
       </div>
 
       {error && <div className="error-banner">{error}</div>}
-      {notice && (
-        <div className="error-banner" style={{ borderColor: 'var(--success)', color: 'var(--success)', background: 'rgba(62,207,142,0.1)' }}>
-          {notice}
-        </div>
-      )}
+      {notice && <div className="success-banner">{notice}</div>}
 
       {processing && (
         <div className="card">
